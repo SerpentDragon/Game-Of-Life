@@ -9,9 +9,15 @@ find_package(SDL2 REQUIRED)
 
 set(SOURCES
     src/main.cpp
+    src/controller/interface.cpp
 )
 
-# set(HEADERS)
+set(HEADERS
+    src/controller/interface.h
+    src/controller/settings.h
+)
+
+file(COPY img DESTINATION ${PROJECT_BINARY_DIR})
 
 add_executable(GameOfLife ${SOURCES})
 
