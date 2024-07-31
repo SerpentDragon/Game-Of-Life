@@ -33,11 +33,15 @@ void Interface::run()
                 handle_mouse_event();
             }
         }
-        
+
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+
         SDL_RenderClear(renderer_);      
 
         SDL_RenderCopy(renderer_, background, nullptr, nullptr);
 
+        game_button_.on_button(x, y);
         game_button_.draw();
 
         display_game_field();
@@ -118,13 +122,18 @@ void Interface::handle_mouse_event()
     int x, y;
     SDL_GetMouseState(&x, &y);
 
-    if (left_top_x_ <= x && x <= left_top_x_ + cell_size_ * field_size_ && 
-        left_top_y_ <= y && y <= left_top_y_ + cell_size_ * field_size_)
+    if (!game_button_.game_has_started())
     {
-        int cell_x = (x - left_top_x_) / cell_size_;
-        int cell_y = (y - left_top_y_) / cell_size_;
+        if (left_top_x_ <= x && x <= left_top_x_ + cell_size_ * field_size_ && 
+            left_top_y_ <= y && y <= left_top_y_ + cell_size_ * field_size_)
+        {
+            int cell_x = (x - left_top_x_) / cell_size_;
+            int cell_y = (y - left_top_y_) / cell_size_;
 
-        bool alive = field_[cell_x][cell_y].is_alive();
-        field_[cell_x][cell_y].set_state(!alive);
+            bool alive = field_[cell_x][cell_y].is_alive();
+            field_[cell_x][cell_y].set_state(!alive);
+        }
     }
+
+    game_button_.is_pressed(x, y);
 }
