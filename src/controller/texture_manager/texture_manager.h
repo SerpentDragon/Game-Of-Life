@@ -12,9 +12,13 @@ class TextureManager
 {
 public:
 
-    static std::shared_ptr<TextureManager> getManager();
+    static std::shared_ptr<TextureManager> get_manager();
 
-    const SDL_Texture* getTexture(const std::string&) const;
+    SDL_Texture* get_texture(const std::string&) const;
+
+    void set_renderer(SDL_Renderer*);
+
+    void load_textures();
 
 private:
 
@@ -28,7 +32,7 @@ private:
 
     TextureManager& operator=(TextureManager&&) noexcept = delete;
 
-    void loadAllTexturesFromDirectory(const std::string&);
+    void load_all_textures_from_dir(const std::string&);
 
 private:
 
@@ -36,5 +40,7 @@ private:
 
     std::string prefix_;
 
-    mutable std::unordered_map<std::string, SDL_Texture> textures_;
+    SDL_Renderer* renderer_;
+
+    mutable std::unordered_map<std::string, SDL_Texture*> textures_;
 };

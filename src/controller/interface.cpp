@@ -3,8 +3,9 @@
 Interface::Interface(int field_size) : field_size_(field_size)
 {
     init_window();
-    init_background();
+    init_texture_manager();
     init_game_field();
+    init_button();
 }
 
 Interface::~Interface()
@@ -15,6 +16,8 @@ Interface::~Interface()
 
 void Interface::run()
 {
+    auto background = TextureManager::get_manager()->get_texture("background/background");
+
     bool run = true;
     SDL_Event event;
 
@@ -26,11 +29,15 @@ void Interface::run()
             {
                 run = false;
             }
+            else if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                handle_mouse_event();
+            }
         }
         
-        SDL_RenderClear(renderer_);
+        SDL_RenderClear(renderer_);      
 
-        SDL_RenderCopy(renderer_, background_, nullptr, nullptr);
+        SDL_RenderCopy(renderer_, background, nullptr, nullptr);
 
         display_game_field();
 
@@ -62,16 +69,17 @@ void Interface::init_window()
         SDL_RENDERER_PRESENTVSYNC);
 }
 
-void Interface::init_background()
+void Interface::init_texture_manager()
 {
-    background_ = IMG_LoadTexture(renderer_, "img/background.bmp");
+    TextureManager::get_manager()->set_renderer(renderer_);
+    TextureManager::get_manager()->load_textures();
 }
 
 void Interface::init_game_field()
 {
-    int cell_size = std::min(window_width_, window_height_) / (field_size_ + 2);
-    int left_top_x = (window_width_ - cell_size * field_size_) / 2;
-    int left_top_y = cell_size;
+    cell_size_ = std::min(window_width_, window_height_) / (field_size_ + 2);
+    left_top_x_ = (window_width_ - cell_size_ * field_size_) / 2;
+    left_top_y_ = cell_size_ / 2;
 
     for(int i = 0; i < field_size_; i++)
     {
@@ -79,24 +87,52 @@ void Interface::init_game_field()
 
         for(int j = 0; j < field_size_; j++)
         {
-            field_[i][j] = Cell(left_top_x + cell_size * i, 
-                left_top_y + cell_size * j, cell_size);
+            field_[i][j] = Cell(left_top_x_ + cell_size_ * i, 
+                left_top_y_ + cell_size_ * j, cell_size_);
         }
     }
 }
 
+void Interface::init_button()
+{
+    int width = window_width_ / 15;
+    int height = window_height_ / 10;
+    int x = (window_width_ - width) / 2;
+    int y = left_top_y_ + (cell_size_ + 0.5) * field_size_;
+
+    game_button_ = Button(renderer_, x, y, width, height);
+}
+
 void Interface::display_game_field()
 {
-
     for(int i = 0; i < field_size_; i++)
     {
         for(int j = 0; j < field_size_; j++)
         {
-            SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
+            field_[i][j].is_alive() ? 
+                SDL_SetRenderDrawColor(renderer_, 255, 0, 0, 255) :
+                SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
+
             SDL_RenderFillRect(renderer_, &field_[i][j].get_cell_rect());
 
             SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
             SDL_RenderDrawRect(renderer_, &field_[i][j].get_cell_rect());
         }
+    }
+}
+
+void Interface::handle_mouse_event()
+{
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+
+    if (left_top_x_ <= x && x <= left_top_x_ + cell_size_ * field_size_ && 
+        left_top_y_ <= y && y <= left_top_y_ + cell_size_ * field_size_)
+    {
+        int cell_x = (x - left_top_x_) / cell_size_;
+        int cell_y = (y - left_top_y_) / cell_size_;
+
+        bool alive = field_[cell_x][cell_y].is_alive();
+        field_[cell_x][cell_y].set_state(!alive);
     }
 }

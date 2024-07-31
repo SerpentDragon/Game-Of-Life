@@ -2,7 +2,7 @@
 
 std::shared_ptr<TextureManager> TextureManager::manager_ = nullptr;
 
-std::shared_ptr<TextureManager> TextureManager::getManager()
+std::shared_ptr<TextureManager> TextureManager::get_manager()
 {
     if (manager_ == nullptr) 
         manager_ = std::shared_ptr<TextureManager>(new TextureManager());
@@ -10,21 +10,24 @@ std::shared_ptr<TextureManager> TextureManager::getManager()
     return manager_;
 }
 
-const SDL_Texture* TextureManager::getTexture(const std::string& name) const
+SDL_Texture* TextureManager::get_texture(const std::string& name) const
 {
     auto it = textures_.find(prefix_ + name);
-    if (it != textures_.end()) return &(it->second);
+    if (it != textures_.end()) return (it->second);
     else return nullptr;
 }
 
-TextureManager::TextureManager()
-    : prefix_("img/")
+void TextureManager::set_renderer(SDL_Renderer* renderer) { renderer_ = renderer; }
+
+void TextureManager::load_textures()
 {
-    loadAllTexturesFromDirectory(prefix_ + "background/");
-    loadAllTexturesFromDirectory(prefix_ + "button/");
+    load_all_textures_from_dir(prefix_ + "background/");
+    load_all_textures_from_dir(prefix_ + "button/");
 }
 
-void TextureManager::loadAllTexturesFromDirectory(const std::string& dir)
+TextureManager::TextureManager() : prefix_("img/") { }
+
+void TextureManager::load_all_textures_from_dir(const std::string& dir)
 {
     for(const auto& file : fs::directory_iterator(dir))
     {
@@ -32,8 +35,11 @@ void TextureManager::loadAllTexturesFromDirectory(const std::string& dir)
         {
             std::string filename = file.path().filename();
             std::string texture_name = file.path().stem();
+
+            assert(renderer_ != nullptr);
+            assert(fs::exists((dir + filename).c_str()));
             
-            textures_[dir + texture_name].loadFromFile(dir + filename);
+            textures_[dir + texture_name] = IMG_LoadTexture(renderer_, (dir + filename).c_str());
         }
     }
 }
