@@ -19,6 +19,7 @@ int main(int argc, char** args)
     interface.run();
 
     SDL_Quit();
+    IMG_Quit();
 
     return 0;
 };

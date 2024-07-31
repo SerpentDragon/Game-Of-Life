@@ -25,6 +25,14 @@ void TextureManager::load_textures()
     load_all_textures_from_dir(prefix_ + "button/");
 }
 
+TextureManager::~TextureManager()
+{
+    for(const auto& val : textures_)
+    {
+        SDL_DestroyTexture(val.second);
+    }
+}
+
 TextureManager::TextureManager() : prefix_("img/") { }
 
 void TextureManager::load_all_textures_from_dir(const std::string& dir)
@@ -35,9 +43,6 @@ void TextureManager::load_all_textures_from_dir(const std::string& dir)
         {
             std::string filename = file.path().filename();
             std::string texture_name = file.path().stem();
-
-            assert(renderer_ != nullptr);
-            assert(fs::exists((dir + filename).c_str()));
             
             textures_[dir + texture_name] = IMG_LoadTexture(renderer_, (dir + filename).c_str());
         }
