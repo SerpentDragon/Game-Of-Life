@@ -13,6 +13,7 @@ set(SOURCES
     src/controller/interface.cpp
     src/controller/button/button.cpp
     src/controller/texture_manager/texture_manager.cpp
+    src/model/model.cpp
     src/view/cell.cpp
 )
 
@@ -20,6 +21,7 @@ set(HEADERS
     src/controller/interface.h
     src/controller/button/button.h
     src/controller/texture_manager/texture_manager.h
+    src/model/model.h
     src/view/cell.h
 )
 
