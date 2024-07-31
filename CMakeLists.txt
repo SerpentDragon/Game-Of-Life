@@ -11,11 +11,15 @@ find_package(SDL2_image REQUIRED)
 set(SOURCES
     src/main.cpp
     src/controller/interface.cpp
+    src/controller/button/button.cpp
+    src/controller/texture_manager/texture_manager.cpp
     src/view/cell.cpp
 )
 
 set(HEADERS
     src/controller/interface.h
+    src/controller/button/button.h
+    src/controller/texture_manager/texture_manager.h
     src/view/cell.h
 )
 

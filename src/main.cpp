@@ -3,9 +3,9 @@
 
 int main(int argc, char** args) 
 {
-    if(SDL_Init(SDL_INIT_EVERYTHING ) != 0)
+    if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        std::cerr << "Can't init SDL\n";
+        std::cerr << "Can't init SDL!\n";
         return 1;
     }
 
