@@ -15,6 +15,7 @@ public:
 
     ~Interface();
 
+    // Run the main loop of the game
     void run();
 
 private:
@@ -29,14 +30,19 @@ private:
 
 private:
 
+    // Init game window params
     void init_window();
 
+    // Init texture manager to use textures
     void init_texture_manager();
 
+    // Init widgets (game field & button)
     void init_widgets();
 
+    // Display game field
     void display_game_field();
 
+    // Process mouse press events
     void handle_mouse_event();
 
 private:

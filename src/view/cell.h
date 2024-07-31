@@ -10,10 +10,13 @@ public:
 
     explicit Cell(SDL_Renderer* renderer, int x, int y, int size);
 
+    // Draw the cell
     void draw();
 
+    // Check ewhether the cell is alive
     bool is_alive() const;
 
+    // Set current state of the cell
     void set_state(bool alive);
 
 private:
