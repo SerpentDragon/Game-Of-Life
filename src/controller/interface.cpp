@@ -87,7 +87,7 @@ void Interface::init_game_field()
 
         for(int j = 0; j < field_size_; j++)
         {
-            field_[i][j] = Cell(left_top_x_ + cell_size_ * i, 
+            field_[i][j] = Cell(renderer_, left_top_x_ + cell_size_ * i, 
                 left_top_y_ + cell_size_ * j, cell_size_);
         }
     }
@@ -109,14 +109,7 @@ void Interface::display_game_field()
     {
         for(int j = 0; j < field_size_; j++)
         {
-            field_[i][j].is_alive() ? 
-                SDL_SetRenderDrawColor(renderer_, 255, 0, 0, 255) :
-                SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
-
-            SDL_RenderFillRect(renderer_, &field_[i][j].get_cell_rect());
-
-            SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
-            SDL_RenderDrawRect(renderer_, &field_[i][j].get_cell_rect());
+            field_[i][j].draw();
         }
     }
 }

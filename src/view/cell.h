@@ -8,9 +8,9 @@ public:
 
     Cell() = default;
 
-    explicit Cell(int x, int y, int size);
+    explicit Cell(SDL_Renderer* renderer, int x, int y, int size);
 
-    const SDL_Rect& get_cell_rect() const;
+    void draw();
 
     bool is_alive() const;
 
@@ -18,11 +18,16 @@ public:
 
 private:
 
+    SDL_Renderer* renderer_;
+
+    // Position and dimensions
     int x_;
     int y_;
     int size_;
 
+    // Cell is alive or dead
     bool alive_;
 
+    // "Area" of the cell
     SDL_Rect cell_rect_;
 };
