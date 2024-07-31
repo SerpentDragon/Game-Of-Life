@@ -12,6 +12,10 @@ public:
 
     const SDL_Rect& get_cell_rect() const;
 
+    bool is_alive() const;
+
+    void set_state(bool alive);
+
 private:
 
     int x_;
