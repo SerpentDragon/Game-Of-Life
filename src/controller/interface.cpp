@@ -4,8 +4,7 @@ Interface::Interface(int field_size) : field_size_(field_size)
 {
     init_window();
     init_texture_manager();
-    init_game_field();
-    init_button();
+    init_widgets();
 }
 
 Interface::~Interface()
@@ -38,6 +37,8 @@ void Interface::run()
         SDL_RenderClear(renderer_);      
 
         SDL_RenderCopy(renderer_, background, nullptr, nullptr);
+
+        game_button_.draw();
 
         display_game_field();
 
@@ -75,11 +76,19 @@ void Interface::init_texture_manager()
     TextureManager::get_manager()->load_textures();
 }
 
-void Interface::init_game_field()
+void Interface::init_widgets()
 {
-    cell_size_ = std::min(window_width_, window_height_) / (field_size_ + 2);
+    // Init game button
+    int button_size = window_height_ / 10;
+    int x = (window_width_ - button_size) / 2;
+    int y = window_height_ - 1.25 * button_size;
+
+    game_button_ = Button(renderer_, x, y, button_size, button_size);
+
+    // Init game field
+    cell_size_ = std::min(window_width_, window_height_ - int(button_size * 1.5)) / (field_size_ + 2);
     left_top_x_ = (window_width_ - cell_size_ * field_size_) / 2;
-    left_top_y_ = cell_size_ / 2;
+    left_top_y_ = cell_size_;
 
     for(int i = 0; i < field_size_; i++)
     {
@@ -91,16 +100,6 @@ void Interface::init_game_field()
                 left_top_y_ + cell_size_ * j, cell_size_);
         }
     }
-}
-
-void Interface::init_button()
-{
-    int width = window_width_ / 15;
-    int height = window_height_ / 10;
-    int x = (window_width_ - width) / 2;
-    int y = left_top_y_ + (cell_size_ + 0.5) * field_size_;
-
-    game_button_ = Button(renderer_, x, y, width, height);
 }
 
 void Interface::display_game_field()

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <SDL2/SDL.h>
+#include "../texture_manager/texture_manager.h"
 
 class Button
 {
@@ -28,4 +29,6 @@ private:
 
     // "Area" of the button
     SDL_Rect button_rect_;
+
+    SDL_Texture* texture_;
 };
