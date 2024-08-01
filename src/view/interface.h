@@ -5,6 +5,7 @@
 #include "widgets/cell.h"
 #include "widgets/button.h"
 #include <SDL2/SDL_image.h>
+#include "../controller/controller.h"
 #include "texture_manager/texture_manager.h"
 
 class Interface
@@ -56,6 +57,7 @@ private:
     // Game window
     SDL_Window* window_;
     SDL_Renderer* renderer_;
+    std::shared_ptr<Controller> controller_;
 
     // Screen and Window params
     int screen_width_;

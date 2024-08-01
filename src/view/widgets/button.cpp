@@ -1,7 +1,7 @@
 #include "button.h"
 
 Button::Button(SDL_Renderer* renderer, int x, int y, int width, int height)
-    : Widget(renderer, x, y, width, height), game_started_(false), play_(false)
+    : Widget(renderer, x, y, width, height), play_(false)
 {
     texture_ = TextureManager::get_manager()->get_texture("button/green_play");
 }
@@ -37,15 +37,11 @@ void Button::on_button(int x, int y)
     }
 }
 
-void Button::is_pressed(int x, int y)
+bool Button::is_pressed(int x, int y)
 {
-    if (!inside_widget(x, y)) return;
-
-    if (!game_started_) game_started_ = true;
+    if (!inside_widget(x, y)) return false;
 
     play_ = !play_;
+
+    return true;
 }
-
-bool Button::game_is_on() const { return play_; }
-
-bool Button::game_has_started() const { return game_started_; }

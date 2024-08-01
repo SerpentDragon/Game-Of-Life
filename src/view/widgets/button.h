@@ -19,18 +19,13 @@ public:
     void on_button(int x, int y);
 
     // Check whether the button is pressed
-    void is_pressed(int x, int y);
-
-    // Check whether the game is on
-    bool game_is_on() const;
-
-    // Check whether the game has been started
-    bool game_has_started() const;
+    bool is_pressed(int x, int y);
 
 private:
 
-    bool game_started_;
+    // Pause or Play state of the button
     bool play_;
 
+    // Texture to render
     SDL_Texture* texture_;
 };

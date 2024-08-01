@@ -15,16 +15,15 @@ Interface::~Interface()
 
 void Interface::run()
 {
-    bool run = true;
     SDL_Event event;
 
-    while (run) 
+    while (!controller_->is_stopped()) 
     {
         while(SDL_PollEvent(&event) != 0)
         {
             if (event.type == SDL_QUIT) 
             {
-                run = false;
+                controller_->process_exit();
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
@@ -32,7 +31,7 @@ void Interface::run()
             }
         }
 
-        SDL_RenderClear(renderer_);      
+        SDL_RenderClear(renderer_); 
 
         display_background();
 
@@ -66,6 +65,9 @@ void Interface::init_window()
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | 
         SDL_RENDERER_PRESENTVSYNC);
+
+    controller_ = std::make_shared<Controller>();
+    controller_->process_init(field_size_);
 }
 
 void Interface::init_texture_manager()
@@ -133,7 +135,7 @@ void Interface::handle_mouse_event()
     int x, y;
     SDL_GetMouseState(&x, &y);
 
-    if (!game_button_.game_has_started())
+    if (!controller_->game_has_started())
     {
         if (left_top_x_ <= x && x <= left_top_x_ + cell_size_ * field_size_ && 
             left_top_y_ <= y && y <= left_top_y_ + cell_size_ * field_size_)
@@ -141,10 +143,15 @@ void Interface::handle_mouse_event()
             int cell_x = (x - left_top_x_) / cell_size_;
             int cell_y = (y - left_top_y_) / cell_size_;
 
-            bool alive = field_[cell_x][cell_y].is_alive();
-            field_[cell_x][cell_y].set_state(!alive);
+            controller_->process_cell_pressed(cell_x, cell_y);
+
+            // bool alive = field_[cell_x][cell_y].is_alive();
+            // field_[cell_x][cell_y].set_state(!alive);
         }
     }
-
-    game_button_.is_pressed(x, y);
+    
+    if (game_button_.is_pressed(x, y))
+    {
+        controller_->process_game_button_pressed();
+    }
 }
