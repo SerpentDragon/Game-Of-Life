@@ -1,8 +1,9 @@
 #pragma once
 
-class GameProcessor
+class GameModel
 {
 public:
+
 
 private:
 

@@ -11,7 +11,7 @@ find_package(SDL2_image REQUIRED)
 set(SOURCES
     src/main.cpp
     src/controller/controller.cpp
-    src/model/game_processor.cpp
+    src/model/game_model.cpp
     src/view/interface.cpp
     src/view/widgets/cell.cpp
     src/view/widgets/button.cpp
@@ -21,7 +21,7 @@ set(SOURCES
 
 set(HEADERS
     src/controller/controller.h
-    src/model/game_processor.h
+    src/model/game_model.h
     src/view/interface.h
     src/view/widgets/cell.h
     src/view/widgets/button.h
