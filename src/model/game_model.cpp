@@ -26,9 +26,9 @@ void GameModel::update_field()
     static int val = 0;
     if (val++ == 5) return;
 
-    std::vector<std::vector<unsigned short>> neighbors(
-        field_height_, std::vector<unsigned short>(field_width_, 0));
+    field_data neighbors(field_height_, std::vector<unsigned short>(field_width_, 0));
 
+    // Calculate the number of 'neighbors' for each cell
     for(int i = 0; i < field_height_; i++)
     {
         for(int j = 0; j < field_width_; j++)
@@ -46,6 +46,10 @@ void GameModel::update_field()
         }
     }
 
+    // Flag to check if all the cells are 'dead' -> Stop the game
+    bool all_dead = true;
+
+    // Update state of a cell according to number of it's neighbors
     for(int i = 0; i < field_height_; i++)
     {
         for(int j = 0; j < field_width_; j++)
@@ -53,6 +57,7 @@ void GameModel::update_field()
             if (neighbors[i][j] == 3) 
             {
                 field_[i][j] = STATE::ALIVE;
+                all_dead = false;
             }
             else if (neighbors[i][j] < 2 || neighbors[i][j] > 3)
             {
@@ -61,9 +66,13 @@ void GameModel::update_field()
         }
     }
 
+    // Send data to view to display it
     interface_->update_field(field_);
 
+    // Delay (speed of the game)
     std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    if (all_dead) interface_->stop();
 }
 
 void GameModel::update()
@@ -71,15 +80,13 @@ void GameModel::update()
     run_ = true;
     auto this_ptr = this->shared_from_this();
 
-    std::thread th([this_ptr]()
+    std::thread([this_ptr]()
     {
         while(this_ptr->is_run())
         {
             this_ptr->update_field();
         }
-    });
-
-    th.detach();
+    }).detach();
 }
 
 bool GameModel::is_run() const { return run_; }

@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+using field_data = std::vector<std::vector<unsigned short>>;
+
 class Interface;
 
 class GameModel : public std::enable_shared_from_this<GameModel>
@@ -34,7 +36,7 @@ private:
     std::shared_ptr<Interface> interface_;
 
     // Field data
-    std::vector<std::vector<unsigned short>> field_;
+    field_data field_;
 
     // Game field size
     int field_width_;

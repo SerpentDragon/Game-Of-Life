@@ -49,7 +49,7 @@ void Interface::run()
     }
 }
 
-void Interface::update_field(std::vector<std::vector<unsigned short>> new_field)
+void Interface::update_field(field_data new_field)
 {
     for(int i = 0; i < field_height_; i++)
     {
@@ -58,6 +58,17 @@ void Interface::update_field(std::vector<std::vector<unsigned short>> new_field)
             field_[i][j].set_state(new_field[i][j]);
         }
     }
+}
+
+void Interface::stop()
+{
+    SDL_Event event;
+    event.type = SDL_QUIT;
+    event.user.code = 1;
+    event.user.data1 = nullptr;
+    event.user.data2 = nullptr;
+
+    SDL_PushEvent(&event);
 }
 
 void Interface::init_window()
@@ -82,6 +93,8 @@ void Interface::init_window()
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | 
         SDL_RENDERER_PRESENTVSYNC);
+
+    // if (window_ == nullptr || renderer_ == nullptr);
 }
 
 void Interface::init_texture_manager()

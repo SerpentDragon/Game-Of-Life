@@ -19,7 +19,12 @@ public:
     // Run the main loop of the game
     void run();
 
-    void update_field(std::vector<std::vector<unsigned short>> new_field);
+    // Check whether the game is over (no alive cells) 
+    // and display a new state of the field
+    void update_field(field_data new_field);
+
+    // Stop the game
+    void stop();
 
 private:
 

@@ -1,9 +1,6 @@
 #include "controller.h"
 
-Controller::Controller() : exit_(false), run_(false), game_started_(false)
-{
-
-}
+Controller::Controller() : exit_(false), run_(false), game_started_(false) { }
 
 void Controller::set_game_model(std::shared_ptr<GameModel> game_model)
 {
