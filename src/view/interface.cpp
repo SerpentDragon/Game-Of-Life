@@ -66,8 +66,7 @@ void Interface::init_window()
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | 
         SDL_RENDERER_PRESENTVSYNC);
 
-    controller_ = std::make_shared<Controller>();
-    controller_->process_init(field_size_);
+    controller_ = std::make_unique<Controller>(field_size_);
 }
 
 void Interface::init_texture_manager()

@@ -1,15 +1,14 @@
 #pragma once
 
+#include <memory>
 #include <SDL2/SDL.h>
+#include "../model/game_model.h"
 
 class Controller
 {
 public:
 
-    Controller();
-
-    // Initialize Model params
-    void process_init(int field_size);
+    Controller(int field_size);
 
     // Processing cell press (i, j - indexes of the cell)
     void process_cell_pressed(int i, int j);
@@ -27,6 +26,8 @@ public:
     bool game_has_started() const;
 
 private:
+
+    std::unique_ptr<GameModel> game_model_;
 
     // Shutdown the app
     bool exit_;

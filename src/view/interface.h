@@ -57,7 +57,7 @@ private:
     // Game window
     SDL_Window* window_;
     SDL_Renderer* renderer_;
-    std::shared_ptr<Controller> controller_;
+    std::unique_ptr<Controller> controller_;
 
     // Screen and Window params
     int screen_width_;

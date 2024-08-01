@@ -1,10 +1,10 @@
 #include "controller.h"
 
-Controller::Controller() : exit_(false), run_(false), game_started_(false) {}
-
-void Controller::process_init(int field_size)
+Controller::Controller(int field_size) 
+    : exit_(false), run_(false), game_started_(false), 
+    game_model_(std::make_unique<GameModel>(field_size))
 {
-    
+
 }
 
 void Controller::process_cell_pressed(int i, int j)
