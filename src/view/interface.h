@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <SDL2/SDL.h>
-#include "../view/cell.h"
-#include "button/button.h"
+#include "widgets/cell.h"
+#include "widgets/button.h"
 #include <SDL2/SDL_image.h>
 #include "texture_manager/texture_manager.h"
 
@@ -39,8 +39,14 @@ private:
     // Init widgets (game field & button)
     void init_widgets();
 
+    // Display background
+    void display_background();
+
     // Display game field
     void display_game_field();
+
+    // Display button
+    void display_button();
 
     // Process mouse press events
     void handle_mouse_event();

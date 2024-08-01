@@ -15,8 +15,6 @@ Interface::~Interface()
 
 void Interface::run()
 {
-    auto background = TextureManager::get_manager()->get_texture("background/background");
-
     bool run = true;
     SDL_Event event;
 
@@ -34,15 +32,11 @@ void Interface::run()
             }
         }
 
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-
         SDL_RenderClear(renderer_);      
 
-        SDL_RenderCopy(renderer_, background, nullptr, nullptr);
+        display_background();
 
-        game_button_.on_button(x, y);
-        game_button_.draw();
+        display_button();
 
         display_game_field();
 
@@ -106,6 +100,14 @@ void Interface::init_widgets()
     }
 }
 
+void Interface::display_background()
+{
+    static auto background = TextureManager::get_manager()
+        ->get_texture("background/background");
+
+    SDL_RenderCopy(renderer_, background, nullptr, nullptr);
+}
+
 void Interface::display_game_field()
 {
     for(int i = 0; i < field_size_; i++)
@@ -115,6 +117,15 @@ void Interface::display_game_field()
             field_[i][j].draw();
         }
     }
+}
+
+void Interface::display_button()
+{
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+
+    game_button_.on_button(x, y);
+    game_button_.draw();
 }
 
 void Interface::handle_mouse_event()

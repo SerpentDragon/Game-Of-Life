@@ -1,5 +1,5 @@
 #include <iostream>
-#include "controller/interface.h"
+#include "view/interface.h"
 
 int main(int argc, char** args) 
 {
