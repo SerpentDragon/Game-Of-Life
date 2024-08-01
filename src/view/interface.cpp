@@ -1,6 +1,7 @@
 #include "interface.h"
 
-Interface::Interface(int field_size) : field_size_(field_size)
+Interface::Interface(std::shared_ptr<Controller> controller, int field_width, int field_height) 
+    : controller_(controller), field_width_(field_width), field_height_(field_height)
 {
     init_window();
     init_texture_manager();
@@ -17,13 +18,18 @@ void Interface::run()
 {
     SDL_Event event;
 
-    while (!controller_->is_stopped()) 
+    while (true) 
     {
+        auto controller = controller_.lock();
+        if (controller == nullptr) break;
+
+        if (controller->is_stopped()) break;
+
         while(SDL_PollEvent(&event) != 0)
         {
             if (event.type == SDL_QUIT) 
             {
-                controller_->process_exit();
+                controller->process_exit();
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
@@ -40,6 +46,17 @@ void Interface::run()
         display_game_field();
 
         SDL_RenderPresent(renderer_);
+    }
+}
+
+void Interface::update_field(std::vector<std::vector<unsigned short>> new_field)
+{
+    for(int i = 0; i < field_height_; i++)
+    {
+        for(int j = 0; j < field_width_; j++)
+        {
+            field_[i][j].set_state(new_field[i][j]);
+        }
     }
 }
 
@@ -65,8 +82,6 @@ void Interface::init_window()
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | 
         SDL_RENDERER_PRESENTVSYNC);
-
-    controller_ = std::make_unique<Controller>(field_size_);
 }
 
 void Interface::init_texture_manager()
@@ -85,18 +100,19 @@ void Interface::init_widgets()
     game_button_ = Button(renderer_, x, y, button_size, button_size);
 
     // Init game field
-    cell_size_ = std::min(window_width_, window_height_ - int(button_size * 1.5)) / (field_size_ + 2);
-    left_top_x_ = (window_width_ - cell_size_ * field_size_) / 2;
+    cell_size_ = std::min(window_width_, window_height_ - int(button_size * 1.5)) / 
+        (std::max(field_width_, field_height_) + 2 * (field_width_ == field_height_));
+    left_top_x_ = (window_width_ - cell_size_ * field_width_) / 2;
     left_top_y_ = cell_size_;
 
-    for(int i = 0; i < field_size_; i++)
+    for(int i = 0; i < field_height_; i++)
     {
-        field_.emplace_back(field_size_);
+        field_.emplace_back(field_width_);
 
-        for(int j = 0; j < field_size_; j++)
+        for(int j = 0; j < field_width_; j++)
         {
-            field_[i][j] = Cell(renderer_, left_top_x_ + cell_size_ * i, 
-                left_top_y_ + cell_size_ * j, cell_size_);
+            field_[i][j] = Cell(renderer_, left_top_x_ + cell_size_ * j, 
+                left_top_y_ + cell_size_ * i, cell_size_);
         }
     }
 }
@@ -111,9 +127,9 @@ void Interface::display_background()
 
 void Interface::display_game_field()
 {
-    for(int i = 0; i < field_size_; i++)
+    for(int i = 0; i < field_height_; i++)
     {
-        for(int j = 0; j < field_size_; j++)
+        for(int j = 0; j < field_width_; j++)
         {
             field_[i][j].draw();
         }
@@ -134,23 +150,23 @@ void Interface::handle_mouse_event()
     int x, y;
     SDL_GetMouseState(&x, &y);
 
-    if (!controller_->game_has_started())
+    auto controller = controller_.lock();
+    if (controller == nullptr) return;
+
+    if (!controller->game_has_started())
     {
-        if (left_top_x_ <= x && x <= left_top_x_ + cell_size_ * field_size_ && 
-            left_top_y_ <= y && y <= left_top_y_ + cell_size_ * field_size_)
+        if (left_top_x_ <= x && x <= left_top_x_ + cell_size_ * field_width_ && 
+            left_top_y_ <= y && y <= left_top_y_ + cell_size_ * field_height_)
         {
             int cell_x = (x - left_top_x_) / cell_size_;
             int cell_y = (y - left_top_y_) / cell_size_;
 
-            controller_->process_cell_pressed(cell_x, cell_y);
-
-            // bool alive = field_[cell_x][cell_y].is_alive();
-            // field_[cell_x][cell_y].set_state(!alive);
+            controller->process_cell_pressed(cell_y, cell_x);
         }
     }
     
     if (game_button_.is_pressed(x, y))
     {
-        controller_->process_game_button_pressed();
+        controller->process_game_button_pressed();
     }
 }

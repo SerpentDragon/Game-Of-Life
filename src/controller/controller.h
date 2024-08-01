@@ -8,7 +8,9 @@ class Controller
 {
 public:
 
-    Controller(int field_size);
+    Controller();
+
+    void set_game_model(std::shared_ptr<GameModel> game_model);
 
     // Processing cell press (i, j - indexes of the cell)
     void process_cell_pressed(int i, int j);
@@ -27,7 +29,7 @@ public:
 
 private:
 
-    std::unique_ptr<GameModel> game_model_;
+    std::shared_ptr<GameModel> game_model_;
 
     // Shutdown the app
     bool exit_;

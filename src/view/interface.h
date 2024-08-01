@@ -12,12 +12,14 @@ class Interface
 {
 public:
 
-    Interface(int field_size);
+    Interface(std::shared_ptr<Controller> controller, int field_width, int field_height);
 
     ~Interface();
 
     // Run the main loop of the game
     void run();
+
+    void update_field(std::vector<std::vector<unsigned short>> new_field);
 
 private:
 
@@ -57,7 +59,7 @@ private:
     // Game window
     SDL_Window* window_;
     SDL_Renderer* renderer_;
-    std::unique_ptr<Controller> controller_;
+    std::weak_ptr<Controller> controller_;
 
     // Screen and Window params
     int screen_width_;
@@ -71,7 +73,9 @@ private:
 
     // Game field & it's params
     std::vector<std::vector<Cell>> field_;
-    int field_size_;
+    int field_width_;
+    int field_height_;
+
     int cell_size_;
     int left_top_x_;
     int left_top_y_;
