@@ -2,9 +2,9 @@
 #include "../view/interface.h"
 
 GameModel::GameModel(std::shared_ptr<Interface> interface, 
-    int field_width, int field_height) 
+    int field_width, int field_height, float game_speed) 
     : interface_(interface), field_width_(field_width), 
-    field_height_(field_height), run_(false)
+    field_height_(field_height), game_speed_(game_speed), run_(false)
 {
     field_.resize(field_height);
 
@@ -70,7 +70,7 @@ void GameModel::update_field()
     interface_->update_field(field_);
 
     // Delay (speed of the game)
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(int(1 / game_speed_ * 1000)));
 
     if (all_dead) interface_->stop();
 }

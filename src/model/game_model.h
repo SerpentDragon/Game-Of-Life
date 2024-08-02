@@ -12,7 +12,8 @@ class GameModel : public std::enable_shared_from_this<GameModel>
 {
 public:
 
-    GameModel(std::shared_ptr<Interface> interface, int field_width, int field_height);
+    GameModel(std::shared_ptr<Interface> interface, 
+        int field_width, int field_height, float game_speed);
 
     // Set specified cell alive
     void set_cell_state(int i, int j);
@@ -42,5 +43,9 @@ private:
     int field_width_;
     int field_height_;
 
+    // Game is on or not
     bool run_;
+
+    // Define the value of delay
+    float game_speed_;
 };
