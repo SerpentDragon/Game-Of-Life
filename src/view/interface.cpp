@@ -1,5 +1,7 @@
 #include "interface.h"
 
+#include <iostream>
+
 Interface::Interface(std::shared_ptr<Controller> controller, int field_width, int field_height) 
     : controller_(controller), field_width_(field_width), field_height_(field_height)
 {
@@ -15,10 +17,10 @@ Interface::~Interface()
 }
 
 void Interface::run()
-{
+{   
     SDL_Event event;
-
-    while (true) 
+    
+    while (true)
     {
         auto controller = controller_.lock();
         if (controller == nullptr) break;
@@ -39,11 +41,12 @@ void Interface::run()
 
         SDL_RenderClear(renderer_); 
 
-        display_background();
+        display_game();
 
-        display_button();
-
-        display_game_field();
+        if (!controller->is_run() && controller->game_has_started())
+        {
+            display_game_over();
+        }
 
         SDL_RenderPresent(renderer_);
     }
@@ -62,13 +65,10 @@ void Interface::update_field(field_data new_field)
 
 void Interface::stop()
 {
-    SDL_Event event;
-    event.type = SDL_QUIT;
-    event.user.code = 1;
-    event.user.data1 = nullptr;
-    event.user.data2 = nullptr;
+    auto controller = controller_.lock();
+    if (controller == nullptr) return;
 
-    SDL_PushEvent(&event);
+    controller->end_game();
 }
 
 void Interface::init_window()
@@ -130,6 +130,15 @@ void Interface::init_widgets()
     }
 }
 
+void Interface::display_game()
+{
+    display_background();
+
+    display_button();
+
+    display_game_field();
+}
+
 void Interface::display_background()
 {
     static auto background = TextureManager::get_manager()
@@ -156,6 +165,20 @@ void Interface::display_button()
 
     game_button_.on_button(x, y);
     game_button_.draw();
+}
+
+void Interface::display_game_over()
+{
+    static SDL_Texture* texture = 
+        TextureManager::get_manager()->get_texture("background/main");
+    int width = window_width_ * 0.6;
+    int height = width * 0.25;
+    int x = (window_width_ - width) / 2;
+    int y = (window_height_ - height) / 2;
+
+    static SDL_Rect rect { x, y, width, height };
+
+    SDL_RenderCopy(renderer_, texture, nullptr, &rect);
 }
 
 void Interface::handle_mouse_event()

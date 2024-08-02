@@ -18,6 +18,9 @@ public:
     // Processing of game button press
     void process_game_button_pressed();
 
+    // Pause the game
+    void end_game();
+
     // Processing the app shutdown
     void process_exit();
 
@@ -26,6 +29,9 @@ public:
 
     // Check whether a game has started
     bool game_has_started() const;
+
+    // Check whether the game is on
+    bool is_run() const;
 
 private:
 

@@ -16,6 +16,7 @@ void Controller::process_cell_pressed(int i, int j)
 
 void Controller::process_game_button_pressed()
 {
+    if (game_model_ == nullptr) return;
     if (!game_started_) game_started_ = true;
 
     run_ = !run_;
@@ -30,8 +31,19 @@ void Controller::process_game_button_pressed()
     }
 }
 
+void Controller::end_game() 
+{
+    if (game_model_ == nullptr) return;
+
+    game_model_->pause(); 
+
+    run_ = false;
+}
+
 void Controller::process_exit() { exit_ = true; }
 
 bool Controller::is_stopped() const { return exit_; }
 
 bool Controller::game_has_started() const { return game_started_; }
+
+bool Controller::is_run() const { return run_; }

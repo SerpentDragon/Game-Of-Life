@@ -47,6 +47,9 @@ private:
     // Init widgets (game field & button)
     void init_widgets();
 
+    // Display all the components of the game window
+    void display_game();
+
     // Display background
     void display_background();
 
@@ -55,6 +58,9 @@ private:
 
     // Display button
     void display_button();
+
+    // Display game over message
+    void display_game_over();
 
     // Process mouse press events
     void handle_mouse_event();

@@ -23,8 +23,7 @@ void GameModel::set_cell_state(int i, int j)
 
 void GameModel::update_field()
 {
-    static int val = 0;
-    if (val++ == 5) return;
+    prev_config_ = field_;
 
     field_data neighbors(field_height_, std::vector<unsigned short>(field_width_, 0));
 
@@ -72,7 +71,7 @@ void GameModel::update_field()
     // Delay (speed of the game)
     std::this_thread::sleep_for(std::chrono::milliseconds(int(1 / game_speed_ * 1000)));
 
-    if (all_dead) interface_->stop();
+    if (all_dead || prev_config_ == field_) interface_->stop();
 }
 
 void GameModel::update()

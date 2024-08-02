@@ -38,6 +38,7 @@ private:
 
     // Field data
     field_data field_;
+    field_data prev_config_;
 
     // Game field size
     int field_width_;
