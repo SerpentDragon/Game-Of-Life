@@ -114,9 +114,9 @@ void Interface::init_widgets()
 
     // Init game field
     cell_size_ = std::min(window_width_, window_height_ - int(button_size * 1.5)) / 
-        (std::max(field_width_, field_height_) + 2 * (field_width_ == field_height_));
+        (std::max(field_width_, field_height_) + 2);
     left_top_x_ = (window_width_ - cell_size_ * field_width_) / 2;
-    left_top_y_ = cell_size_;
+    left_top_y_ = (window_height_ - int(button_size * 1.5) - field_height_ * cell_size_) / 2;
 
     for(int i = 0; i < field_height_; i++)
     {

@@ -60,8 +60,6 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    
-
     auto controller = std::make_shared<Controller>();
     auto interface = std::make_shared<Interface>(controller, field_width, field_height);
     auto game_model = std::make_shared<GameModel>(interface, field_width, field_height, game_speed);
