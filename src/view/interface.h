@@ -47,9 +47,6 @@ private:
     // Init widgets (game field & button)
     void init_widgets();
 
-    // Display all the components of the game window
-    void display_game();
-
     // Display background
     void display_background();
 

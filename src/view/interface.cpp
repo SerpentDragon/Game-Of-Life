@@ -19,7 +19,7 @@ Interface::~Interface()
 void Interface::run()
 {   
     SDL_Event event;
-    
+
     while (true)
     {
         auto controller = controller_.lock();
@@ -41,7 +41,11 @@ void Interface::run()
 
         SDL_RenderClear(renderer_); 
 
-        display_game();
+        display_background();
+
+        display_button();
+
+        display_game_field();
 
         if (!controller->is_run() && controller->game_has_started())
         {
@@ -128,15 +132,6 @@ void Interface::init_widgets()
                 left_top_y_ + cell_size_ * i, cell_size_);
         }
     }
-}
-
-void Interface::display_game()
-{
-    display_background();
-
-    display_button();
-
-    display_game_field();
 }
 
 void Interface::display_background()
