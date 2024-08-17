@@ -10,6 +10,8 @@ public:
 
     explicit Cell(SDL_Renderer* renderer, int x, int y, int size);
 
+    virtual ~Cell() = default;
+
     // Draw the cell
     void draw() const override;
 

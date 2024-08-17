@@ -13,6 +13,8 @@ public:
 
     virtual void draw() const = 0;
 
+    virtual ~Widget() = default;
+
 protected:
 
     // This functions defines whether (x, y) is inside the widget area

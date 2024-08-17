@@ -12,6 +12,8 @@ public:
 
     Button(SDL_Renderer* renderer, int x, int y, int width, int height);
 
+    virtual ~Button() = default;
+
     // Draw the button
     void draw() const override;
 
