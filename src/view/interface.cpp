@@ -165,7 +165,7 @@ void Interface::display_button()
 void Interface::display_game_over()
 {
     static SDL_Texture* texture = 
-        TextureManager::get_manager()->get_texture("background/main");
+        TextureManager::get_manager()->get_texture("background/game_over");
     int width = window_width_ * 0.6;
     int height = width * 0.25;
     int x = (window_width_ - width) / 2;
