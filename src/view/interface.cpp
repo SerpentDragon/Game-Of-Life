@@ -1,7 +1,5 @@
 #include "interface.h"
 
-#include <iostream>
-
 Interface::Interface(std::shared_ptr<Controller> controller, int field_width, int field_height) 
     : controller_(controller), field_width_(field_width), field_height_(field_height)
 {
@@ -31,7 +29,7 @@ void Interface::run()
         {
             if (event.type == SDL_QUIT) 
             {
-                controller->process_exit();
+                if (!controller->is_stopped()) controller->process_exit();
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
@@ -50,6 +48,7 @@ void Interface::run()
         if (!controller->is_run() && controller->game_has_started())
         {
             display_game_over();
+            controller->set_game_over();
         }
 
         SDL_RenderPresent(renderer_);
@@ -72,7 +71,7 @@ void Interface::stop()
     auto controller = controller_.lock();
     if (controller == nullptr) return;
 
-    controller->end_game();
+    controller->pause_game();
 }
 
 void Interface::init_window()
@@ -183,6 +182,8 @@ void Interface::handle_mouse_event()
 
     auto controller = controller_.lock();
     if (controller == nullptr) return;
+
+    if (controller->game_over()) return;
 
     if (!controller->game_has_started())
     {

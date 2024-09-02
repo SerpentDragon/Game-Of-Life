@@ -19,7 +19,7 @@ public:
     void process_game_button_pressed();
 
     // Pause the game
-    void end_game();
+    void pause_game();
 
     // Processing the app shutdown
     void process_exit();
@@ -33,6 +33,10 @@ public:
     // Check whether the game is on
     bool is_run() const;
 
+    bool game_over() const;
+
+    void set_game_over();
+
 private:
 
     std::shared_ptr<GameModel> game_model_;
@@ -45,4 +49,7 @@ private:
 
     // Game has started or not
     bool game_started_;
+
+    // Check whether the game is over
+    bool game_over_;
 };

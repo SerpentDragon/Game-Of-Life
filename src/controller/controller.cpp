@@ -1,10 +1,10 @@
 #include "controller.h"
 
-Controller::Controller() : exit_(false), run_(false), game_started_(false) { }
+Controller::Controller() : exit_(false), run_(false), game_started_(false), game_over_(false) { }
 
 void Controller::set_game_model(std::shared_ptr<GameModel> game_model)
 {
-    game_model_ = std::move(game_model);
+    game_model_ = game_model;
 }
 
 void Controller::process_cell_pressed(int i, int j)
@@ -31,7 +31,7 @@ void Controller::process_game_button_pressed()
     }
 }
 
-void Controller::end_game() 
+void Controller::pause_game() 
 {
     if (game_model_ == nullptr) return;
 
@@ -47,3 +47,7 @@ bool Controller::is_stopped() const { return exit_; }
 bool Controller::game_has_started() const { return game_started_; }
 
 bool Controller::is_run() const { return run_; }
+
+bool Controller::game_over() const { return game_over_; }
+
+void Controller::set_game_over() { game_over_ = true; }
